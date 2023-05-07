@@ -129,6 +129,7 @@ As_grupa2 <- function(grupa2){
 #Miary koncentracji:
 
 #Kurtoza
+library(moments)
 kurtoza_grupa1 <- kurtosis(grupa1)
 kurtoza_grupa2 <- kurtosis(grupa2)
 
