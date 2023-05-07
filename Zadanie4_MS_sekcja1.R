@@ -1,18 +1,35 @@
-# Wczytanie danych z pliku .csv
+# Dane
 wyniki <- read.csv("data/data.csv")
+data <- subset(wyniki, Group == 2)$Score
 
-# Podział na grupy
-grupa2 <- subset(wyniki, Group == 2)$Score
+# Liczność próby
+n <- length(data)
 
-# Test dwustronny t-Studenta
-test <- t.test(grupa2, sd = 20, alternative = "two.sided", conf.level = 0.95)
+# Średnia arytmetyczna próby
+x_mean <- mean(data)
 
-# Wynik testu
-print(test)
+# Estymator odchylenia standardowego próby
+s <- sqrt((1/(n-1)) * sum((data - x_mean)^2))
 
-# Interpretacja wyniku
-if (test$p.value < 0.05) {
-  cat("Na poziomie istotności 0.05 można stwierdzić, że odchylenie standardowe liczby punktów uzyskanych przez studentów grupy 2 wynosi 20.")
-} else {
-  cat("Nie ma podstaw do odrzucenia hipotezy zerowej, czyli odchylenie standardowe liczby punktów uzyskanych przez studentów grupy 2 różni się od 20")
+# Wartość hipotetyczna
+sigma <- 20
+
+# Statystyka testowa
+chi_square <- (n - 1) * s^2 / sigma^2
+
+# Stopnie swobody
+df <- n - 1
+print(df)
+
+# Wartość p
+p_value <- 1 - pchisq(chi_square, df)
+print(p_value)
+
+# Wynik testu hipotezy
+if(p_value > 0.05){
+  cat("Odrzucamy hipotezę zerową, odchylenie standardowe nie wynosi 20.")
+}else{
+  cat("Nie ma podstaw do odrzucenia hipotezy zerowej, odchylenie standardowe wynosi 20.")
 }
+
+
