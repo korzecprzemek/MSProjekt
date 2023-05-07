@@ -16,9 +16,10 @@ mediana_grupa1 <- median(grupa1)
 mediana_grupa2 <- median(grupa2)
 
 #Moda
-#to nie działa
-moda_grupa1 <- names(which.max(table(grupa1)))
-moda_grupa2 <- names(which.max(table(grupa2)))
+moda <- function(grupa){
+  uniqv <-unique(grupa)
+  uniqv[which.max(tabulate(match(grupa,uniqv)))]
+}
 
 #Kwantyle
 
@@ -29,7 +30,7 @@ kwantyle_grupa2 <- quantile(grupa2,c(0.25,0.75))
 
 #Wariancja obciążona s^2
 
-wariancja_obc_grupa1 <- var(grupa1)
+wariancja_grupa1 <- var(grupa1)
 wariancja_grupa2 <- var(grupa2)
 
 #Odchylenie standardowe
@@ -56,58 +57,50 @@ wsp_zmiennosci_grupa1 <- (sd(grupa1)/mean(grupa1))*100
 wsp_zmiennosci_grupa2 <- (sd(grupa1)/mean(grupa2))*100
 
 #Klasyczny przedział zmienności
-klasyczny_przedział_grupa1 <- c(mean(grupa1) - 2sd(grupa1), mean(grupa1) + 2sd(grupa1))
-klasyczny_przedział_grupa2 <- c(mean(grupa2) - 2sd(grupa2), mean(grupa2) + 2sd(grupa2))
+klasyczny_przedział_grupa1 <- c(mean(grupa1) - 2*sd(grupa1), mean(grupa1) + 2*sd(grupa1))
+klasyczny_przedział_grupa2 <- c(mean(grupa2) - 2*sd(grupa2), mean(grupa2) + 2*sd(grupa2))
 
 #Miary zróżnicowania pozycyjne:
 
 
 #Rozstęp międzykwartylowy
 
-roztep_mdzq_grupa1 <- IQR(grupa1)
-roztep_mdzq_grupa2 <- IQR(grupa2)
+rozstep_mdzq_grupa1 <- IQR(grupa1)
+rozstep_mdzq_grupa2 <- IQR(grupa2)
 
 #Odchylenie ćwiartkowe
 
-odch_cw_grupa1 <- (kwartyl_grupa1[2] - kwartyl_grupa1[1])/0.6745 # 0.6745 odchylenie standardowe między 1 a 3 kwartylem
-odch_cw_grupa2 <- (kwartyl_grupa2[2] - kwartyl_grupa2[1])/0.6745
+odch_cw_grupa1 <- (kwantyle_grupa1[2] - kwantyle_grupa1[1])/2 
+odch_cw_grupa2 <- (kwantyle_grupa2[2] - kwantyle_grupa2[1])/2
 
 #Pozycyjny przedział zmienności:
 pozycyjny_prz_zm_grupa1 <- function(grupa1) {
-  Q3 <- quantile(grupa1, 0.75)
-  Q1 <- quantile(grupa1, 0.25)
   mediana <- median(grupa1)
-  IQR <- Q3 - Q1
-  pozycyjny_przedzial <- c(mediana - 2 * odch_cw_grupa1(grupa1) * IQR, 
-                           mediana + 2 * odchylenie_cwiartkowe(grupa1) * IQR)
+  oq <- (kwantyle_grupa1[2] - kwantyle_grupa1[1])/2
+  pozycyjny_przedzial <- c(mediana - oq,mediana + oq) 
   return(pozycyjny_przedzial)
 }
 pozycyjny_prz_zm_grupa2 <- function(grupa2) {
-  Q3 <- quantile(grupa2, 0.75)
-  Q1 <- quantile(grupa2, 0.25)
   mediana <- median(grupa2)
-  IQR <- Q3 - Q1
-  pozycyjny_przedzial <- c(mediana - 2 * odch_cw_grupa2(grupa2) * IQR, 
-                           mediana + 2 * odch_cw_grupa2(grupa2) * IQR)
+  oq <- (kwantyle_grupa2[2] - kwantyle_grupa2[1])/2
+  pozycyjny_przedzial <- c(mediana - oq,mediana + oq) 
   return(pozycyjny_przedzial)
 }
-
+  
 #Współczynnik zmienności (pozycyjny) 𝑉𝑞:
-wsp_zmiennosci_pozycyjny_grupa1 <- function(grupa1) {
-  Q3 <- quantile(grupa1, 0.75)
-  Q1 <- quantile(grupa1, 0.25)
+wsp_zmiennosci_pozycyjny1 <- function(grupa1) {
+  oq <- (kwantyle_grupa1[2] - kwantyle_grupa1[1])/2
   mediana <- median(grupa1)
-  wsp_zmiennosci <- (odchylenie_cwiartkowe(grupa1) / (mediana / (Q3 - Q1))) * 100
-  return(wsp_zmiennosci)
-}
-wsp_zmiennosci_pozycyjny_grupa2 <- function(grupa2) {
-  Q3 <- quantile(grupa2, 0.75)
-  Q1 <- quantile(grupa2, 0.25)
-  mediana <- median(grupa2)
-  wsp_zmiennosci <- (odchylenie_cwiartkowe(grupa2) / (mediana / (Q3 - Q1))) * 100
+  wsp_zmiennosci <- (oq/mediana) * 100
   return(wsp_zmiennosci)
 }
 
+wsp_zmiennosci_pozycyjny2 <- function(grupa2) {
+  oq <- (kwantyle_grupa2[2] - kwantyle_grupa2[1])/2
+  mediana <- median(grupa2)
+  wsp_zmiennosci <- (oq/mediana) * 100
+  return(wsp_zmiennosci)
+}
 
 #Miary asymetrii:
 
@@ -130,6 +123,7 @@ As_grupa2 <- function(grupa2){
 #Miary koncentracji:
 
 #Kurtoza
+library(moments)
 kurtoza_grupa1 <- kurtosis(grupa1)
 kurtoza_grupa2 <- kurtosis(grupa2)
 
