@@ -1,4 +1,9 @@
 #Zadanie 2
+
+#Instalacja wymaganych bibliotek
+install.packages("nortest")
+library(nortest)
+
 #Wczytanie danych z pliku .csv
 wyniki <- read.csv("data/data.csv")
 
@@ -6,7 +11,6 @@ wyniki <- read.csv("data/data.csv")
 grupa1 <- subset(wyniki,Group == 1)$Score
 grupa2 <- subset(wyniki,Group == 2)$Score
 
-install.packages("nortest")
 
 # Test zgodności Kolmogorowa-Lillieforsa dla grupy 1
 test1 <- lillie.test(grupa1)

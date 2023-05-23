@@ -1,3 +1,5 @@
+#Zadanie 3
+
 # Wczytanie danych z pliku .csv
 wyniki <- read.csv("data/data.csv")
 
