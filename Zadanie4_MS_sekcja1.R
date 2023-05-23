@@ -1,3 +1,5 @@
+#Zadanie 4
+
 # Dane
 wyniki <- read.csv("data/data.csv")
 data <- subset(wyniki, Group == 2)$Score

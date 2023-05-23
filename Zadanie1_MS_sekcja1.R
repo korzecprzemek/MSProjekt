@@ -1,3 +1,9 @@
+# Zadanie 1
+
+#Instalacja wymaganych bibliotek
+install.packages("moments")
+library(moments)
+
 #Wczytanie danych z pliku .csv
 wyniki <- read.csv("data/data.csv")
 
@@ -123,7 +129,6 @@ As_grupa2 <- function(grupa2){
 #Miary koncentracji:
 
 #Kurtoza
-library(moments)
 kurtoza_grupa1 <- kurtosis(grupa1)
 kurtoza_grupa2 <- kurtosis(grupa2)
 
